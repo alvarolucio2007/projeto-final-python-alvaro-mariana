@@ -14,7 +14,7 @@ ListaLivros=list[LivroDict]
 class BackEnd():
     lista_livros:ListaLivros
     set_id:set[int]
-    JSON_PATH = os.path.join(os.getcwd(), "livros.json")
+    JSON_PATH = os.path.join(os.getcwd(), "projeto-final-python-alvaro-mariana/livros.json")
     def __init__(self) -> None:
         self.lista_livros = []
         self.set_id = set() #Set, pois 2 produtos diferentes não podem ter o mesmo código.
