@@ -6,7 +6,6 @@
 #
 import json
 import typing
-import streamlit as st
 import os
 
 LivroDict=dict[str,int|str|bool|float]
@@ -78,6 +77,14 @@ class BackEnd():
         self.set_id.add(novo_id)
         self.set_titulo.add(titulo)
         self.salvar_dados()
-    def atualizar_produto(self,codigo:int):
-        pass
-        
+    def atualizar_livro(self,codigo:int, campo:str, novo_valor :str|int|float) -> None:
+        if id not in self.set_id:
+            raise ValueError("Código Inválido!")
+        if len(campo)==0:
+            raise ValueError("Campo Inválido!")
+        if isinstance(novo_valor,int) or isinstance(novo_valor,str) and  len(novo_valor)==0:
+            raise ValueError("Novo Valor Inválido!")
+        for i in range(len(self.lista_livros)):
+            if campo.lower()=="nome":
+                self.lista_livros[i]["Nome"]=str(novo_valor)
+            elif campo.lower()==""
