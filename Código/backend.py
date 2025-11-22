@@ -39,7 +39,7 @@ class BackEnd:
                     self.lista_livros = dados_json
                     for livro in self.lista_livros:
                         livro["id"] = int(livro["id"])
-                        livro["titulo"] = str(livro["titulo"])
+                        livro["titulo"] = str(livro["titulo"]).lower().strip()
                         livro["preco"] = float(
                             livro["preco"]
                         )  # Recomendável usar preço sem acento pra n dar BO
@@ -66,6 +66,10 @@ class BackEnd:
         with open(self.JSON_PATH, "w") as arquivo:
             json.dump(self.lista_livros, arquivo)
 
+    def obter_proximo_id(self) -> int:
+        if self.set_id:
+            return max(self.set_id)+1
+        return 1
     def cadastrar_livro(
         self, titulo: str, preco: float, autor: str, ano: int, quantidade: int
     ) -> None:
@@ -81,6 +85,8 @@ class BackEnd:
             novo_id = max(self.set_id) + 1
         else:
             novo_id = 1
+        if titulo.strip().lower() in self.set_titulo:
+            raise ValueError(f"Título {titulo} já existente no sistema!")
         livro: dict[str, typing.Any] = {
             "id": int(novo_id),
             "titulo": str(titulo),
@@ -92,7 +98,7 @@ class BackEnd:
         }
         self.lista_livros.append(livro)
         self.set_id.add(novo_id)
-        self.set_titulo.add(titulo)
+        self.set_titulo.add(titulo.strip().lower())
         self.salvar_dados()
 
     def atualizar_livro(
@@ -110,6 +116,13 @@ class BackEnd:
         for i in range(len(self.lista_livros)):
             if int(self.lista_livros[i]["id"]) == id:
                 if campo.lower() == "titulo":
+                    novo_titulo_form=str(novo_valor).strip().lower()
+                    antigo_titulo_form=str(self.lista_livros[i]["titulo"]).strip().lower()
+                    if novo_titulo_form != antigo_titulo_form and novo_titulo_form in self.set_titulo:
+                        raise ValueError(f"Novo título {novo_valor} já existe para outro livro!")
+                    if antigo_titulo_form in self.set_titulo:
+                        self.set_titulo.remove(antigo_titulo_form)
+                    self.set_titulo.add(novo_titulo_form)
                     self.lista_livros[i]["titulo"] = str(novo_valor)
                 elif campo.lower() == "preco":
                     self.lista_livros[i]["preco"] = float(novo_valor)
