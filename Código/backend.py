@@ -5,8 +5,6 @@
 #   Lista de dicionários: [{id: int, titulo: str,preco: float , autor: str, ano: int , disponivel:bool, quantidade: int}]
 #
 import json
-
-
 import os
 import typing
 
@@ -23,7 +21,9 @@ class BackEnd:
 
     def __init__(self) -> None:
         self.lista_livros = []
-        self.set_id = set()  # Set, pois 2 produtos diferentes não podem ter o mesmo código.
+        self.set_id = (
+            set()
+        )  # Set, pois 2 produtos diferentes não podem ter o mesmo código.
         self.set_titulo = set()  # 2 Livros diferentes não podem ter o mesmo nome, e também para permitir pesquisa por nome.
         self.carregar_dados()
 
@@ -40,11 +40,17 @@ class BackEnd:
                     for livro in self.lista_livros:
                         livro["id"] = int(livro["id"])
                         livro["titulo"] = str(livro["titulo"])
-                        livro["preco"] = float(livro["preco"])  # Recomendável usar preço sem acento pra n dar BO
+                        livro["preco"] = float(
+                            livro["preco"]
+                        )  # Recomendável usar preço sem acento pra n dar BO
                         livro["autor"] = str(livro["autor"])
                         livro["ano"] = int(livro["ano"])
-                        livro["quantidade"] = int(livro["quantidade"])  # Coloquei quantidade antes de disponível pq irei ditar se é disponível pela quantidade.
-                        livro["disponivel"] = (livro["quantidade"] > 0)  # Checa se é True ou False, se for >0 é true e estará automaticamente disponível, e vice-versa.
+                        livro["quantidade"] = int(
+                            livro["quantidade"]
+                        )  # Coloquei quantidade antes de disponível pq irei ditar se é disponível pela quantidade.
+                        livro["disponivel"] = (
+                            livro["quantidade"] > 0
+                        )  # Checa se é True ou False, se for >0 é true e estará automaticamente disponível, e vice-versa.
                         self.set_id.add(int(livro["id"]))
                         self.set_titulo.add(str(livro["titulo"]))
                 except json.JSONDecodeError:
@@ -89,18 +95,20 @@ class BackEnd:
         self.set_titulo.add(titulo)
         self.salvar_dados()
 
-    def atualizar_livro(self, id: int, campo: str, novo_valor: str | int | float) -> None:
+    def atualizar_livro(
+        self, id: int, campo: str, novo_valor: str | int | float
+    ) -> None:
         if id not in self.set_id:
             raise ValueError("Código Inválido!")
         if len(campo) == 0:
             raise ValueError("Campo Inválido!")
-        if isinstance(novo_valor,str) and len(novo_valor.strip())==0:
+        if isinstance(novo_valor, str) and len(novo_valor.strip()) == 0:
             raise ValueError("Novo Valor não pode estar vazio!")
-        if campo.lower() in ["preco","quantidade"]:
-            if isinstance(novo_valor,(int,float)) and novo_valor<0:
+        if campo.lower() in ["preco", "quantidade"]:
+            if isinstance(novo_valor, (int, float)) and novo_valor < 0:
                 raise ValueError("Valor não pode ser negativo!")
         for i in range(len(self.lista_livros)):
-            if int(self.lista_livros[i]["id"])==id:
+            if int(self.lista_livros[i]["id"]) == id:
                 if campo.lower() == "titulo":
                     self.lista_livros[i]["titulo"] = str(novo_valor)
                 elif campo.lower() == "preco":
@@ -115,51 +123,49 @@ class BackEnd:
                 break
         self.salvar_dados()
 
-    def buscar_livro(self, opcao: str, valor:str|int) -> list:
-        resultados=[]
-        if opcao.lower()=="codigo":
-            codigo=int(valor)
+    def buscar_livro(self, opcao: str, valor: str | int) -> list:
+        resultados = []
+        if opcao.lower() == "codigo":
+            codigo = int(valor)
             if codigo not in self.set_id:
                 raise ValueError("Livro não encontrado!")
             for livro in self.lista_livros:
-                if livro["id"]==codigo:
+                if livro["id"] == codigo:
                     resultados.append(livro)
                     break
-        elif opcao.lower()=="titulo":
+        elif opcao.lower() == "titulo":
             for livro in self.lista_livros:
                 if str(valor).lower() in str(livro["titulo"]).lower():
                     resultados.append(livro)
-        elif opcao.lower()=="autor":
+        elif opcao.lower() == "autor":
             for livro in self.lista_livros:
                 if str(valor).lower() in str(livro["autor"]).lower():
                     resultados.append(livro)
         if not resultados:
             raise ValueError("Nenhum livro encontrado!")
         return resultados
-    
-    def excluir_livro(self,id:int) -> None:
+
+    def excluir_livro(self, id: int) -> None:
         if id not in self.set_id:
             raise ValueError(f"Id {id} não encontrado! ")
         for i in range(len(self.lista_livros)):
-            if int(self.lista_livros[i]["id"])==id:
-                _=self.lista_livros.pop(i)
+            if int(self.lista_livros[i]["id"]) == id:
+                _ = self.lista_livros.pop(i)
                 self.set_id.remove(id)
                 self.salvar_dados()
                 break
-    
+
     def listar_livros(self) -> ListaLivros:
         return self.lista_livros
-    
+
     def gerar_relatorio(self) -> dict:
-        total_livros=len(self.lista_livros)
-        disponiveis=sum(1 for d in self.lista_livros if d["disponivel"])
-        indisponiveis=total_livros-disponiveis
-        valor_total=sum(d["preco"]* d["quantidade"] for d in self.lista_livros)
-        return{
+        total_livros = len(self.lista_livros)
+        disponiveis = sum(1 for d in self.lista_livros if d["disponivel"])
+        indisponiveis = total_livros - disponiveis
+        valor_total = sum(d["preco"] * d["quantidade"] for d in self.lista_livros)
+        return {
             "total_livros": total_livros,
             "livros_disponiveis": disponiveis,
             "livros_indisponiveis": indisponiveis,
-            "valor_total_estoque": round(valor_total,2)
+            "valor_total_estoque": round(valor_total, 2),
         }
-        
-            
