@@ -175,7 +175,7 @@ class BackEnd:
         total_livros = len(self.lista_livros)
         disponiveis = sum(1 for d in self.lista_livros if d["disponivel"])
         indisponiveis = total_livros - disponiveis
-        valor_total = sum(d["preco"] * d["quantidade"] for d in self.lista_livros)
+        valor_total = sum(float(d["preco"]) * int(d["quantidade"]) for d in self.lista_livros)
         return {
             "total_livros": total_livros,
             "livros_disponiveis": disponiveis,
