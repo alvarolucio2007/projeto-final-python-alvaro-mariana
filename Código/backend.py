@@ -7,6 +7,7 @@
 import json
 import os
 import typing
+from datetime import datetime
 
 LivroDict = dict[str, int | str | bool | float]
 ListaLivros = list[LivroDict]
@@ -15,9 +16,7 @@ ListaLivros = list[LivroDict]
 class BackEnd:
     lista_livros: ListaLivros
     set_id: set[int]
-    JSON_PATH = os.path.join(
-        os.getcwd(), "projeto-final-python-alvaro-mariana/livros.json"
-    )
+    JSON_PATH = os.path.join(os.getcwd(), "livros.json")
 
     def __init__(self) -> None:
         self.lista_livros = []
@@ -33,13 +32,13 @@ class BackEnd:
                 json.dump([], f)
             self.lista_livros = []
         try:
-            with open(self.JSON_PATH, "r") as arquivo:
+            with open(self.JSON_PATH, "r", encoding="utf-8") as arquivo:
                 try:
                     dados_json: ListaLivros = json.load(arquivo)
                     self.lista_livros = dados_json
                     for livro in self.lista_livros:
                         livro["id"] = int(livro["id"])
-                        livro["titulo"] = str(livro["titulo"]).lower().strip()
+                        livro["titulo"] = str(livro["titulo"]).strip()
                         livro["preco"] = float(
                             livro["preco"]
                         )  # Recomendável usar preço sem acento pra n dar BO
@@ -68,8 +67,9 @@ class BackEnd:
 
     def obter_proximo_id(self) -> int:
         if self.set_id:
-            return max(self.set_id)+1
+            return max(self.set_id) + 1
         return 1
+
     def cadastrar_livro(
         self, titulo: str, preco: float, autor: str, ano: int, quantidade: int
     ) -> None:
@@ -81,12 +81,11 @@ class BackEnd:
             raise ValueError("Valor deve ser maior que zero!")
         if quantidade < 0:
             raise ValueError("Quantidade não pode ser negativa!")
-        if self.set_id:
-            novo_id = max(self.set_id) + 1
-        else:
-            novo_id = 1
+        novo_id = self.obter_proximo_id()
         if titulo.strip().lower() in self.set_titulo:
             raise ValueError(f"Título {titulo} já existente no sistema!")
+        if ano < 0 or ano > datetime.now().year + 1:
+            raise ValueError(f"Ano inválido! Use entre 0 e {datetime.now().year+1}")
         livro: dict[str, typing.Any] = {
             "id": int(novo_id),
             "titulo": str(titulo),
@@ -116,10 +115,17 @@ class BackEnd:
         for i in range(len(self.lista_livros)):
             if int(self.lista_livros[i]["id"]) == id:
                 if campo.lower() == "titulo":
-                    novo_titulo_form=str(novo_valor).strip().lower()
-                    antigo_titulo_form=str(self.lista_livros[i]["titulo"]).strip().lower()
-                    if novo_titulo_form != antigo_titulo_form and novo_titulo_form in self.set_titulo:
-                        raise ValueError(f"Novo título {novo_valor} já existe para outro livro!")
+                    novo_titulo_form = str(novo_valor).strip().lower()
+                    antigo_titulo_form = (
+                        str(self.lista_livros[i]["titulo"]).strip().lower()
+                    )
+                    if (
+                        novo_titulo_form != antigo_titulo_form
+                        and novo_titulo_form in self.set_titulo
+                    ):
+                        raise ValueError(
+                            f"Novo título {novo_valor} já existe para outro livro!"
+                        )
                     if antigo_titulo_form in self.set_titulo:
                         self.set_titulo.remove(antigo_titulo_form)
                     self.set_titulo.add(novo_titulo_form)
@@ -129,6 +135,11 @@ class BackEnd:
                 elif campo.lower() == "autor":
                     self.lista_livros[i]["autor"] = str(novo_valor)
                 elif campo.lower() == "ano":
+                    if isinstance(novo_valor, int):
+                        if novo_valor < 0 or novo_valor > datetime.now().year + 1:
+                            raise ValueError(
+                                f"Ano inválido! Use entre 0 e {datetime.now().year + 1}"
+                            )
                     self.lista_livros[i]["ano"] = int(novo_valor)
                 elif campo.lower() == "quantidade":
                     self.lista_livros[i]["quantidade"] = int(novo_valor)
@@ -136,7 +147,7 @@ class BackEnd:
                 break
         self.salvar_dados()
 
-    def buscar_livro(self, opcao: str, valor: str | int) -> list:
+    def buscar_livro(self, opcao: str, valor: str | int) -> ListaLivros:
         resultados = []
         if opcao.lower() == "codigo":
             codigo = int(valor)
@@ -163,8 +174,11 @@ class BackEnd:
             raise ValueError(f"Id {id} não encontrado! ")
         for i in range(len(self.lista_livros)):
             if int(self.lista_livros[i]["id"]) == id:
-                _ = self.lista_livros.pop(i)
+                livro_removido :dict[str,typing.Any] = self.lista_livros.pop(i)
                 self.set_id.remove(id)
+                titulo_removido = livro_removido["titulo"].strip().lower()
+                if titulo_removido in self.set_titulo:
+                    self.set_titulo.remove(titulo_removido)
                 self.salvar_dados()
                 break
 
@@ -175,10 +189,13 @@ class BackEnd:
         total_livros = len(self.lista_livros)
         disponiveis = sum(1 for d in self.lista_livros if d["disponivel"])
         indisponiveis = total_livros - disponiveis
-        valor_total = sum(float(d["preco"]) * int(d["quantidade"]) for d in self.lista_livros)
+        valor_total = sum(
+            float(d["preco"]) * int(d["quantidade"]) for d in self.lista_livros
+        )
         return {
             "total_livros": total_livros,
             "livros_disponiveis": disponiveis,
             "livros_indisponiveis": indisponiveis,
             "valor_total_estoque": round(valor_total, 2),
         }
+
