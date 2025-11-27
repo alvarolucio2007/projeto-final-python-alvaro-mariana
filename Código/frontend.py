@@ -3,4 +3,4 @@
 import streamlit as st #Fazer o front-end em si, para rodar, vai no terminal e digita "streamlit run {caminho relativo} "
 from backend import BackEnd #Importar o backend pra vc conseguir usar e testar aq
 class FrontEnd: #Recomendo fazer type hinting e POO pq fica chiquérrimo
-    pass
+    def __init__(self) -> None:
