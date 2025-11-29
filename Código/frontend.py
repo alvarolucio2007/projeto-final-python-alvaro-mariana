@@ -4,3 +4,14 @@ import streamlit as st #Fazer o front-end em si, para rodar, vai no terminal e d
 from backend import BackEnd #Importar o backend pra vc conseguir usar e testar aq
 class FrontEnd: #Recomendo fazer type hinting e POO pq fica chiquérrimo
     def __init__(self) -> None:
+        self.estoque=BackEnd()
+        self.produtos=self.estoque.lista_livros
+    def renderizar_menu_lateral(self)->str:
+        with st.sidebar:
+            st.header("Selecione a ação")
+            opcao_selecionada:str=st.dropbox("Navegação",["Teste","teste","teste"])
+            return opcao_selecionada
+    
+front=FrontEnd
+front.renderizar_menu_lateral
+    
