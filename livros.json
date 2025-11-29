@@ -1,1 +1,1 @@
-[{"id": 1, "titulo": "1984", "preco": 45.9, "autor": "George Orwell", "ano": 2025, "disponivel": true, "quantidade": 10}]
+[{"id": 1, "titulo": "nao disponivelll", "preco": 0.01, "autor": "n e nao", "ano": 1996, "disponivel": false, "quantidade": 0}, {"id": 2, "titulo": "a", "preco": 0.01, "autor": "a", "ano": 0, "disponivel": false, "quantidade": 0}, {"id": 3, "titulo": "aa", "preco": 10000.0, "autor": "a", "ano": 1000, "disponivel": false, "quantidade": 0}]
