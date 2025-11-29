@@ -53,4 +53,4 @@ if __name__=="__main__":
     app=FrontEnd()
     app.renderizar_cadastro() #Mude essa função aq pra mudar oq aparece na pagina do streamlit
 
-    
+    #
