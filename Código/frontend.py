@@ -163,6 +163,7 @@ class FrontEnd:  # Recomendo fazer type hinting e POO pq fica chiquérrimo
     def renderizar_excluir(self) -> None:
         st.markdown("Excluir Livro")
         st.warning("Esta ação é permanente e não pode ser desfeita!")
+        self.exibir_mensagens_pendentes()
         if "codigo_excluir" not in st.session_state:
             st.session_state.codigo_excluir = None
         with st.form("form_exclusao_busca"):
