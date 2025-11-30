@@ -85,7 +85,7 @@ class BackEnd:
         if titulo.strip().lower() in self.set_titulo:
             raise ValueError(f"Título {titulo} já existente no sistema!")
         if ano < 0 or ano > datetime.now().year + 1:
-            raise ValueError(f"Ano inválido! Use entre 0 e {datetime.now().year+1}")
+            raise ValueError(f"Ano inválido! Use entre 0 e {datetime.now().year + 1}")
         livro: dict[str, typing.Any] = {
             "id": int(novo_id),
             "titulo": str(titulo),
@@ -174,7 +174,7 @@ class BackEnd:
             raise ValueError(f"Id {id} não encontrado! ")
         for i in range(len(self.lista_livros)):
             if int(self.lista_livros[i]["id"]) == id:
-                livro_removido :dict[str,typing.Any] = self.lista_livros.pop(i)
+                livro_removido: dict[str, typing.Any] = self.lista_livros.pop(i)
                 self.set_id.remove(id)
                 titulo_removido = livro_removido["titulo"].strip().lower()
                 if titulo_removido in self.set_titulo:
@@ -198,4 +198,3 @@ class BackEnd:
             "livros_indisponiveis": indisponiveis,
             "valor_total_estoque": round(valor_total, 2),
         }
-
