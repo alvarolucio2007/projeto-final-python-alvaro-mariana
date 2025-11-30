@@ -1,6 +1,6 @@
 ## Sistema de Gerenciamento de Livros (CRUD)
 
-![Status](https://img.shields.io/badge/Status-Pronto)
+![Status](https://img.shields.io/badge/Status-Pronto%2B)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![Frontend](https://img.shields.io/badge/Frontend-Streamlit-red)
 ![Architecture](https://img.shields.io/badge/Architecture-POO%2FTyped-orange)
@@ -59,6 +59,7 @@ O código de lógica está segregado da interface, facilitando o desenvolvimento
 ## Como Executar?
 
 O sistema é construído em Python 3.12.3 e utiliza o framework Streamlit para o Frontend.
+Clique [Aqui](https://alvaro-mariana-projeto-final-gerenciamento-livros.streamlit.app/) para acessar o deploy online do app.
 
 ### 1. Requisitos e Setup
 ```bash
