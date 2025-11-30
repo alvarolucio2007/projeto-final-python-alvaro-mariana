@@ -131,6 +131,3 @@ class FrontEnd: #Recomendo fazer type hinting e POO pq fica chiquérrimo
         elif opcao=="Gerar Relatórios":
             pass
                     
-if __name__=="__main__":
-    app=FrontEnd()
-    app.rodar() #Mude essa função aq pra mudar oq aparece na pagina do streamlit
