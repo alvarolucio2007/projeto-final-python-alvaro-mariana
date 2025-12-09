@@ -60,9 +60,14 @@ Clique [Aqui](https://alvaro-mariana-projeto-final-gerenciamento-livros.streamli
 ### 1. Requisitos e Setup
 ```bash
 # Clone o repositório
-git clone [https://docs.github.com/pt/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github](https://docs.github.com/pt/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github)
-cd sistema-livros
+git clone https://github.com/alvarolucio2007/projeto-final-python-alvaro-mariana.git
 
 # Crie um ambiente virtual (recomendado)
 python -m venv venv
 source venv/bin/activate
+
+#Baixe a extensão streamlit
+pip install streamlit ou uv pip install streamlit
+
+#Execute o programa com streamlit
+streamlit run app.py
